@@ -1,0 +1,3 @@
+# The engine writes these: compiled output and the type tables it lays beside the mod
+*.js
+.claude-plugin/types/

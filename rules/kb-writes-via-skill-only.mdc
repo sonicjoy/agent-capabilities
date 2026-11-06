@@ -1,0 +1,19 @@
+---
+description: The Colossus KB changes only through kb.py write (knowledge skill), after the user confirms
+alwaysApply: true
+---
+
+# Colossus KB writes go through the knowledge skill only
+
+Every change to Colossus knowledge goes through `kb.py write …`, following the `knowledge` skill, and only **after the user says yes** to the exact change (show the `--dry-run` result and the fields first).
+
+Never:
+
+- write to the KB with `write_neo4j_cypher` or any other Neo4j MCP tool, or any Cypher of your own;
+- run `graph/admin/*` (admin scripts are for humans);
+- edit `knowledge/colossus-bets/` by hand: it is an old snapshot made by `kb.py export`, not a source;
+- promote your own draft unless the user has told you who confirmed it and where (`--confirmed-by EMAIL --evidence URL`); `business/pools` drafts need someone other than the author to approve them.
+
+When you notice knowledge worth keeping (a rule, a decision, a lesson), ask: "Should I record this in the Colossus KB?" After a write, report the fact id and version. The graph is what agents read, so don't run `kb.py export` or offer an export MR unless the user asks.
+
+If a write is refused (integrity, an outdated `--expected-current`, a secret, a read-only machine), report the message as it is. Don't work around it.

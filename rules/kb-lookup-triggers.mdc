@@ -1,0 +1,23 @@
+---
+description: When to look up the Colossus KB (planning, designing, debugging, implementing) and when not to
+alwaysApply: true
+---
+
+# Look up the Colossus KB before acting on documented areas
+
+Colossus business rules and technical decisions live in the Colossus KB graph. Look them up with the `knowledge` skill (`kb.py read …`) **before** you act in the situations below, so the work doesn't contradict a recorded rule.
+
+| Phase | Look up when |
+|-------|--------------|
+| **Planning** | The task touches pools, settlement, remaining units, commingling, StatsFeed, cbtote, fantasy/MVP, or the GitLab process; or you are writing acceptance criteria |
+| **Designing** | Cross-service flows, Kafka topics, data stores, API or schema changes |
+| **Debugging** | Remaining units, leg official, event ordering, pool restarts, commingling tickets, merchant IDs: **before** proposing a fix |
+| **Implementing** | The change touches a documented area and nothing was looked up earlier in the task |
+
+**Not for:** formatting, typos, comments, dependency bumps, or work outside Colossus.
+
+**How:** minimal and on demand: `read search --q "…"` (or `read current-by-category`), then `read fact --id …` for the 1–3 hits that matter, and `read related` only for design or debugging. Stop when the question is answered. Mention the fact ids you relied on.
+
+**If the KB isn't reachable** (`kb.py status` fails with `missing COLOSSUS_KB_…`), say so and ask the user to run `python scripts/setup_kb.py` in agent-capabilities. The graph is the only source of truth: don't answer from the markdown snapshot in `knowledge/colossus-bets/`, which is not kept up to date.
+
+**If a fact disagrees with the code or the user**, say so and ask which is right. If the KB is wrong or out of date, offer to record the correction (see `kb-writes-via-skill-only`).

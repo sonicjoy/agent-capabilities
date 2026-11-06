@@ -1,0 +1,65 @@
+---
+description: Bandit security baseline standards for Python application code
+globs: "**/*.py"
+alwaysApply: true
+---
+
+# Bandit (Python security)
+
+When a repo uses Bandit with a baseline (`bandit_baseline.json` or similar), **existing baselined findings are allowed; any new finding fails CI**. Do not introduce new Bandit hits in application/library code.
+
+## Before finishing Python changes (when the repo has a baseline)
+
+```powershell
+uv pip install bandit   # or: pip install bandit
+bandit -r <scan-path> -b bandit_baseline.json
+```
+
+Use the repo's scan path (often `src/`). Skip if the project has no Bandit baseline.
+
+## Do not introduce new hits
+
+| Rule | Avoid in application code |
+|------|---------------------------|
+| **B608** | SQL/queries built with f-strings or `.format()` for dynamic **values** |
+| **B101** | `assert` for runtime checks (`assert` is fine in tests) |
+| **B404/B603/B607** | `subprocess` — prefer library APIs; keep shell-outs in `scripts/` |
+| **B104** | Binding `0.0.0.0` unless required (e.g. container health checks) |
+
+### SQL / BigQuery / DB (B608)
+
+```python
+# BAD — user/config input in the query string
+query = f"select * from t where id = {user_id}"
+
+# GOOD — bound parameters; identifiers only from trusted config
+query = "select ... from `{table}` where id = %s"
+cursor.execute(query, (user_id,))
+```
+
+### Control flow (B101)
+
+```python
+# BAD
+assert resource is not None
+
+# GOOD
+if resource is None:
+    raise RuntimeError("resource not initialized")
+```
+
+## Baseline updates (intentional only)
+
+Regenerate only after review — never to hide accidental new issues:
+
+```powershell
+bandit -r <scan-path> -f json -o bandit_baseline.json
+```
+
+On Windows, **normalize paths to forward slashes** before commit (Linux CI compares literally):
+
+```powershell
+python -c "import json; p='bandit_baseline.json'; d=json.load(open(p)); d['metrics']={k.replace(chr(92),'/') if k!='_totals' else k:v for k,v in d['metrics'].items()}; [r.update(filename=r['filename'].replace(chr(92),'/')) for r in d['results']]; json.dump(d, open(p,'w'), indent=2); open(p,'a').write(chr(10))"
+```
+
+Safe but unavoidable findings: `# nosec Bxxx` with a one-line justification, then refresh baseline.

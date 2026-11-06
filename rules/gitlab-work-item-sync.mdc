@@ -1,0 +1,28 @@
+---
+description: Every Colossus task has one GitLab work item, kept in sync with the work (status and Plan comments)
+alwaysApply: true
+---
+
+# Colossus work items stay in sync with the work
+
+For any Colossus task (`gitlab.colossusbets.com`), there is **one** GitLab work item, in the project of the repo being changed, assigned to the user you work for. Create it if none exists. Details, description headings and commands: the `plan-gitlab-work-item` skill.
+
+Update it **in the same turn** the progress happens:
+
+| When | Do |
+|------|----|
+| Work starts | Status **In progress**, comment **Plan — start** |
+| An MR opens or merges, a slice finishes, the approach or result changes | Comment **Plan — progress**; rewrite the description if Why, What, Details, Scope or Acceptance changed |
+| Acceptance is met and verified | Comment **Plan — done** with the evidence (MR, test output, query results), then status **Done** |
+
+Status is the built-in field (`To do`, `In progress`, `Done`), set with GraphQL `workItemUpdate` + `statusWidget`, not a label. Never `Closes`/`Fixes`/`Resolves` in commits or MRs.
+
+```markdown
+**Plan — <start|progress|done>**
+- Plan: <plan name or path>
+- What changed: <one or two lines>
+- Status: <To do | In progress | Done>
+- Next: <next step or blocker>
+```
+
+Comments on **someone else's** issue still need the user's go-ahead.

@@ -1,0 +1,8 @@
+# Local overrides — never commit real MCP or credentials
+mcp/mcp.json
+.env
+.env.*
+*.pem
+__pycache__/
+.pytest_cache/
+.scratch/

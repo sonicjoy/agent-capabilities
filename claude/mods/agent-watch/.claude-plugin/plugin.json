@@ -1,0 +1,7 @@
+{
+  "name": "agent-watch",
+  "version": "1.2.0",
+  "description": "Live pane of what the agent is doing: a timeline of every step, each agent's cost, context, thinking and terminals, and the files it writes as it writes them",
+  "author": { "name": "Joe Luo" },
+  "types": "./types/index.d.ts"
+}

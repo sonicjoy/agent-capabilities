@@ -1,0 +1,20 @@
+---
+description: Run probe/research scripts yourself; never park them in %TEMP% for a Run click
+alwaysApply: true
+---
+
+# Run probe scripts yourself
+
+The user does not click **Run** on a `Create …\AppData\Local\Temp\….sql` card. That stall is a failed probe.
+
+When you need SQL, a dump, or a one-off Python helper to research:
+
+1. **Write it in the workspace** under `.scratch/` (gitignored). Use the Write tool. Never `%TEMP%`, `/tmp`, or `AppData\Local\Temp`.
+2. **Execute it in the same turn** via Shell (`Get-Content -Raw '.scratch/foo.sql' | bq query …`) or the matching MCP query tool. Request permissions on that call if needed.
+3. **Return the results.** Do not stop at a file create, a “click Run”, or “here is a script”.
+
+PowerShell still owns quoting: write the file, then pipe. Do not put SQL in
+`python -c` or `@" "@`. The file path is `.scratch/`, not Temp, not `.cache/`.
+
+Trap: a backtick before `r`, `n` or `t` inside a PowerShell double-quoted string is an escape
+(`` `r `` is CR), which silently corrupts backtick-quoted table names. Write the file.

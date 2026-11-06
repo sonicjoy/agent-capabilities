@@ -1,0 +1,7 @@
+# Knowledge-base tooling is stored with LF line endings, whatever the editor or OS writes.
+graph/** text eol=lf
+ingest/** text eol=lf
+export/** text eol=lf
+docs/** text eol=lf
+skills/knowledge/scripts/** text eol=lf
+.gitattributes text eol=lf

@@ -1,0 +1,104 @@
+{
+  "mcpServers": {
+    "MS Learn Docs": {
+      "url": "https://learn.microsoft.com/api/mcp",
+      "headers": {}
+    },
+    "neo4j-colossus-kb": {
+      "command": "uvx",
+      "args": ["mcp-neo4j-cypher@0.6.0", "--transport", "stdio", "--read-only"],
+      "env": {
+        "NEO4J_URI": "${env:COLOSSUS_KB_URI}",
+        "NEO4J_USERNAME": "${env:COLOSSUS_KB_READER_USER}",
+        "NEO4J_PASSWORD": "${env:COLOSSUS_KB_READER_PASSWORD}",
+        "NEO4J_DATABASE": "${env:COLOSSUS_KB_DATABASE}"
+      }
+    },
+    "neo4j-aura": {
+      "command": "uvx",
+      "args": ["mcp-neo4j-cypher@0.6.0", "--transport", "stdio"],
+      "env": {
+        "NEO4J_URI": "<neo4j+s://xxxx.databases.neo4j.io>",
+        "NEO4J_USERNAME": "<your own login, never the shared neo4j admin>",
+        "NEO4J_PASSWORD": "<from-secrets-manager>",
+        "NEO4J_DATABASE": "neo4j"
+      }
+    },
+    "local_mysql_cbtote_test": {
+      "command": "uvx",
+      "args": ["mysql_mcp_server"],
+      "env": {
+        "MYSQL_HOST": "localhost",
+        "MYSQL_PORT": "3306",
+        "MYSQL_USER": "<local-user>",
+        "MYSQL_PASSWORD": "<local-password>",
+        "MYSQL_DATABASE": "cbtote_test"
+      }
+    },
+    "staging_mysql_cbtote": {
+      "command": "uvx",
+      "args": ["mysql_mcp_server"],
+      "env": {
+        "MYSQL_HOST": "<staging-mysql-tote-replica-host>",
+        "MYSQL_PORT": "3306",
+        "MYSQL_USER": "<read-only-user>",
+        "MYSQL_PASSWORD": "<from-secrets-manager>",
+        "MYSQL_DATABASE": "cbtote"
+      }
+    },
+    "production_uk_cbtote": {
+      "command": "uvx",
+      "args": ["mysql_mcp_server"],
+      "env": {
+        "MYSQL_HOST": "<production-uk-mysql-tote-replica-host>",
+        "MYSQL_PORT": "3306",
+        "MYSQL_USER": "<approved-user>",
+        "MYSQL_PASSWORD": "<from-secrets-manager>",
+        "MYSQL_DATABASE": "cbtote"
+      }
+    },
+    "production_us_fantasy_cbtote": {
+      "command": "uvx",
+      "args": ["mysql_mcp_server"],
+      "env": {
+        "MYSQL_HOST": "<fantasy-prod-mysql-host>",
+        "MYSQL_PORT": "3306",
+        "MYSQL_USER": "<approved-user>",
+        "MYSQL_PASSWORD": "<from-secrets-manager>",
+        "MYSQL_DATABASE": "cbtote"
+      }
+    },
+    "staging_mysql_stats_feed": {
+      "command": "uvx",
+      "args": ["mysql_mcp_server"],
+      "env": {
+        "MYSQL_HOST": "<staging-stats-feed-mysql-host>",
+        "MYSQL_PORT": "3306",
+        "MYSQL_USER": "<read-only-user>",
+        "MYSQL_PASSWORD": "<from-secrets-manager>",
+        "MYSQL_DATABASE": "stats_feed"
+      }
+    },
+    "aws-mcp": {
+      "command": "uvx",
+      "args": [
+        "mcp-proxy-for-aws@latest",
+        "https://aws-mcp.us-east-1.api.aws/mcp",
+        "--profile",
+        "<aws-profile-name>"
+      ]
+    },
+    "awslabs.redshift-mcp-server": {
+      "disabled": false,
+      "timeout": 60,
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["awslabs.redshift-mcp-server@latest"],
+      "env": {
+        "AWS_PROFILE": "<aws-profile-name>",
+        "AWS_DEFAULT_REGION": "eu-west-2",
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      }
+    }
+  }
+}

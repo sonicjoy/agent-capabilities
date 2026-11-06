@@ -1,0 +1,164 @@
+{
+  "files": {},
+  "facts": {
+    "aws-cli-and-mcp-profile-for-data-warehouse-scripts": {
+      "id": "aws-profile-data-warehouse-scripts",
+      "summary": "In data-warehouse-scripts, always use the AWS profile reporting, for both the AWS CLI and the AWS MCP."
+    },
+    "check-knowledge-before-implementing": {
+      "kind": "rule",
+      "summary": "Before changing code in documented areas (pools, RemUnits, pool restart, event ordering, conventions), read the relevant knowledge entries first.",
+      "keywords": [
+        "check knowledge first"
+      ]
+    },
+    "code-verification": {
+      "summary": "Verify code changes by building, add unit tests for core logic changes, and run the existing tests."
+    },
+    "commingling-pool-replication-sequence-cfs": {
+      "id": "commingling-pool-replication",
+      "summary": "A change to a commingled pool is replicated from the host tote to guest totes: the host CFS collects it, stores it in S3 and publishes it globally, and each guest CFS recreates competitors, sport events and the pool."
+    },
+    "commingling-ticket-files-upload-bucket-and-ticketsready": {
+      "id": "commingling-ticket-files-shared-bucket"
+    },
+    "debug-sequence-mvp-market-metrics-never-updated-created-at-updated-at": {
+      "id": "mvp-market-metrics-never-updated-2026-01",
+      "summary": "MVP market_metrics stay at their inserted values because the update path (SetResults) is never called, not because 0 is written."
+    },
+    "debugging-workflow": {
+      "summary": "When debugging, verify theories and propose fixes, but don't change code until the user confirms.",
+      "keywords": [
+        "debugging",
+        "debug no code until confirmed",
+        "debug no changes",
+        "debug verify"
+      ]
+    },
+    "deleting-unnecessary-code-is-more-productive-than-writing-new": {
+      "id": "delete-over-add"
+    },
+    "do-not-reload-pool-on-each-message-ticketlist": {
+      "id": "no-pool-reload-per-message",
+      "summary": "Don't reload the pool from the DB on each sport event history message: GetPoolAsync doesn't load TicketList, so units stay 0; use the pool given at start."
+    },
+    "engine-pool-controllers-restart-flow": {
+      "summary": "A pool controller restart runs Console → ReloadTicketsForPool → cycle data → POOL_AMENDMENT on the messages topic → the engine restarts the pool's controllers."
+    },
+    "engine-pool-start-sequence": {
+      "kind": "description"
+    },
+    "event-flow-architecture": {
+      "kind": "description",
+      "summary": "Sport event status changes flow from the console through the database and Kafka to the engine (enginelinux)."
+    },
+    "fantasy-mido-competitor-images": {
+      "keywords": [
+        "pick'em",
+        "pick'em images"
+      ]
+    },
+    "filtering-data-confirm-backend-support": {
+      "kind": "rule"
+    },
+    "fix-duplicated-data-using-sql-scripts": {
+      "kind": "rule"
+    },
+    "flow-strategy-pool-type-agnostic-controller": {
+      "id": "rem-units-flow-strategy"
+    },
+    "football-team-sport-sub-code": {
+      "keywords": [
+        "FOOTBALL teams"
+      ]
+    },
+    "gitlab-conventions": {
+      "summary": "Colossus GitLab is the self-hosted gitlab.colossusbets.com, not GitLab.com; point glab at that host."
+    },
+    "gitlab-issue-comments": {
+      "kind": "rule",
+      "keywords": [
+        "gitlab",
+        "gitlab comments"
+      ]
+    },
+    "legofficial-vs-db-leg-official-for-shutdown": {
+      "id": "leg-official-for-shutdown"
+    },
+    "mvp-remaining-units-when-all-sport-events-terminal-issue-151": {
+      "id": "mvp-remaining-units-all-events-terminal",
+      "keywords": [
+        "SEP",
+        "MVP",
+        "abandoned",
+        "OFFICIAL",
+        "MVP RU"
+      ]
+    },
+    "mvp-uses-market-metrics-not-market-results": {
+      "id": "mvp-uses-market-metrics"
+    },
+    "mvp-withdrawal-and-favourite-for-remaining-units": {
+      "id": "mvp-withdrawal-favourite-ru"
+    },
+    "official-event-must-affect-leg-match-pools": {
+      "id": "official-event-affects-leg"
+    },
+    "pool-event-flow-strategy-split-match-vs-non-match": {
+      "id": "pool-flow-strategy-split",
+      "summary": "Match pools (type_code with is_match_kind = 1) use MarketBasedPoolEventFlowStrategy; all other pools use SportEventBasedPoolEventFlowStrategy."
+    },
+    "pool-restart-sport-event-history-ordering": {
+      "id": "pool-restart-event-ordering"
+    },
+    "pool-start-sequence-cycle-data-daemon": {
+      "kind": "description",
+      "summary": "Cycle data finalises a pool (cycledata_finalised) and the pools Kafka topic makes the engine start it; a controller restart is a separate flow via POOL_AMENDMENT.",
+      "keywords": [
+        "cycledata_finalised",
+        "pool start (normal)"
+      ]
+    },
+    "premature-exit-replay-vs-db-and-vacuous-truth": {
+      "id": "premature-exit-vacuous-truth",
+      "kind": "lesson",
+      "summary": "The controller exited early because replay marked legs official in memory (LegOfficial) while the DB still had them unofficial, not because a pool had no legs."
+    },
+    "reload-tickets-flag-cleared-by-engine": {
+      "summary": "The console sets reload_tickets when it requests a pool controller restart; the engine clears it after handling the resulting POOL_AMENDMENT."
+    },
+    "ru-history-skip-rules-in-one-place": {
+      "summary": "All rules for skipping a remaining-unit history row live in one method, ShouldSkipRemUnitHistoryRow; amendments are never skipped."
+    },
+    "sep-markets-fantasy-and-mvp-evolution": {
+      "summary": "SEP pools link legs to metrics through markets rather than event results; Fantasy extends SEP with player metrics across events, and MVP extends Fantasy.",
+      "keywords": [
+        "pools",
+        "SEP",
+        "Fantasy",
+        "MVP",
+        "markets (SEP)"
+      ]
+    },
+    "sport-event-history-snapshot-event-info-json-add-info": {
+      "id": "seh-snapshot-event-info"
+    },
+    "statsfeeddaemon-stats-and-cbtote-updates": {
+      "kind": "description",
+      "summary": "StatsFeedDaemon downloads SportsData stats into stats_feed and writes metrics to cbtote only for markets used in pools."
+    },
+    "team-image-s3-key-bb-and-normal-pools": {
+      "summary": "Team images are stored at the S3 key {Sport}/{Season}/{Sport}_{GlobalTeamId}.{EXT}, e.g. FOOTBALL/2026/FOOTBALL_90002051.PNG.",
+      "keywords": [
+        "team images",
+        "team S3 key"
+      ]
+    },
+    "use-market-status-from-events-markethistories-sep": {
+      "id": "sep-market-status-from-markethistories"
+    },
+    "withdrawn-player-runner-unit-re-allocation": {
+      "id": "withdrawn-unit-reallocation"
+    }
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "pool_id": "81410",
+  "title": "Post-Mortem: Pool 81410 Wrong Settlement",
+  "subtitle": "Pick'em 10, FANTASY_OU — Internal Use Only",
+  "meta": {
+    "Date of incident": "11–12 July 2026",
+    "Environment": "Production UK (pool 81410) / US Fantasy commingled (pool 1659)",
+    "Status": "Root cause identified; manual correction prepared, not yet applied in production",
+    "Prepared": "12 July 2026",
+    "Distribution": "Internal — Ops, Engineering, Product"
+  },
+  "sections": [
+    {
+      "heading": "Executive Summary",
+      "level": 1,
+      "paragraphs": [
+        "Pool 81410 (Pick'em 10, MLB FANTASY_OU) settled OFFICIAL at 00:42 UTC on 12 July with 3 of 10 legs wrong — all settled UNDER when they should have been OVER. This caused incorrect pool results and 67 tickets with payout discrepancies (net +£177.53 to players on correction)."
+      ],
+      "bold_paragraphs": [
+        {
+          "label": "Root cause",
+          "text": "Fantasy OU approval gate. When a player's stat crossed the over/under threshold (+ 10% settlement buffer), cbstatsfeed created fantasy_approvals instead of publishing FOU_UPD. Three approvals were never actioned by ops before OFFICIAL."
+        },
+        {
+          "label": "Not the cause",
+          "text": "SportsData lag (cross-checked against MLB Gameday/ESPN play-by-play), manual_override, or settle_manually flags."
+        }
+      ]
+    },
+    {
+      "heading": "Wrong Legs",
+      "level": 1,
+      "table": {
+        "headers": ["Leg", "Player", "Metric", "Line", "Settled", "Correct", "Result"],
+        "rows": [
+          ["1", "Cristopher Sánchez", "STRIKES_PITCHING", "0.5", "0", "7", "UNDER → OVER"],
+          ["3", "Bryce Harper", "HITS_RUNS_RBI", "1.5", "1", "2", "UNDER → OVER"],
+          ["6", "Matt Vierling", "HITS_RUNS_RBI", "1.5", "1", "4", "UNDER → OVER"]
+        ]
+      },
+      "paragraphs": [
+        "Corrected results string: 2/1/2/1/1/2/2/1/2/2 (was 1/1/1/1/1/1/2/1/2/2)"
+      ]
+    },
+    {
+      "heading": "Fantasy Approvals",
+      "level": 1,
+      "table": {
+        "headers": ["ID", "Leg", "Player", "Proposed value", "Created", "Approved"],
+        "rows": [
+          ["3389", "1", "Sánchez", "1", "22:26:45", "No"],
+          ["3390", "6", "Vierling", "2", "22:55:15", "No"],
+          ["3391", "3", "Harper", "2", "23:20:01", "No"],
+          ["3392", "9", "Yamamoto", "2", "01:57:43", "Yes (04:08)"],
+          ["3393", "10", "Pages", "1", "03:01:44", "Yes (04:03)"]
+        ]
+      }
+    },
+    {
+      "heading": "Impact",
+      "level": 1,
+      "table": {
+        "headers": ["Metric", "Value"],
+        "rows": [
+          ["Wrong leg outcomes", "3 / 10"],
+          ["Tickets with payout change", "67"],
+          ["Net payout delta", "+£177.53 to players"],
+          ["Commingled exposure", "UK 81410 + US 1659"],
+          ["Offer regen offGenId", "304903"]
+        ]
+      }
+    },
+    {
+      "heading": "Remediation — Pending",
+      "level": 1,
+      "numbered": [
+        "Approve/action or bypass stale fantasy approvals for legs 1, 3, 6",
+        "Update market_results and sport_event_histories with correct metric amounts",
+        "Pool restart / settlement correction on 81410 and commingled 1659",
+        "Apply corrected offer files and process payout adjustments (67 tickets)",
+        "Operator sign-off on correction"
+      ]
+    },
+    {
+      "heading": "Lessons Learned",
+      "level": 1,
+      "numbered": [
+        "Fantasy approval is a single point of failure for FANTASY_OU settlement.",
+        "Low OU lines (0.5 K) trigger approval on first event — tote may never update.",
+        "stats_feed correctness does not imply tote correctness.",
+        "Cross-check public play-by-play before escalating SportsData."
+      ]
+    }
+  ]
+}
